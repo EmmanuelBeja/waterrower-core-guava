@@ -1,0 +1,64 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+allprojects {
+    group = libGroupId
+    version = libVersion
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+
+    // Serial communication:
+    implementation 'io.netty:netty-all:5.0.0.Alpha2'
+    implementation 'com.fazecast:jSerialComm:2.11.4'
+
+    // Utils:
+    implementation 'com.google.guava:guava:33.5.0-jre'
+
+    // Logging:
+    implementation 'org.slf4j:slf4j-api:2.0.17'
+    testImplementation 'org.slf4j:slf4j-simple:2.0.17'
+
+
+    // JUnit and tests:
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.0.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:6.0.1'
+    testImplementation 'org.mockito:mockito-core:5.20.0'
+}
+
+jar {
+    manifest {
+        attributes  'Implementation-Title': libTitle,
+                    'Implementation-Version': libVersion,
+                    'Implementation-Vendor': libAuthor
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication.class) {
+            artifact jar
+            groupId = libGroupId
+            artifactId = libArtifactId
+            version = libVersion
+        }
+    }
+}
